@@ -32,7 +32,7 @@ This gives an **offline, slot-time-aware view of PF fairness** that can later be
 
 ## Repository Structure
 
-A typical layout for this repo:
+The following files have been consolidated into a single `prb_graphsage_gnn.ipynb` notebook within `term_project/` for convenience.
 
 ```text
 .
@@ -46,9 +46,7 @@ A typical layout for this repo:
 │   └── prb_graphsage_gnn.ipynb   # Main ML4G term project notebook (full pipeline)
 ├── requirements.txt              # Python dependencies
 └── README.md                     # This file
-````
-
-> **Note:** some files may be combined in your local clone (e.g., model + dataloaders defined inside the notebook). The above is the conceptual structure.
+```
 
 ---
 
