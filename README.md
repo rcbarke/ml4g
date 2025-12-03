@@ -268,5 +268,3 @@ print("val confusion:", confusion_from_probs(val_y, val_p))
 * Course: **CPSC 8810 (ML4G)** at Clemson University.
 * Inspiration and future deployment targets from **NVIDIA AI RAN / Aerial** research.
 
-```
-
