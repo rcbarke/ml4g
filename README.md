@@ -32,7 +32,7 @@ This gives an **offline, slot-time-aware view of PF fairness** that can later be
 
 ## Repository Structure
 
-The following files have been consolidated into a single `prb_graphsage_gnn.ipynb` notebook within `term_project/` for convenience.
+The following files have been consolidated into a single `prb_graphsage_gnn.ipynb` notebook within `term_project/` for convenience. It has `demo` and `full_dataset` variants.
 
 ```text
 .
@@ -40,12 +40,12 @@ The following files have been consolidated into a single `prb_graphsage_gnn.ipyn
 ├── tti_trust_dataloader.py       # (Optional) Sequence-level loader for the TCN baseline
 ├── prb_graph_dataloader.py       # UE-level graph construction & PyG DataLoaders
 ├── models/
-│   ├── prb_graph_gnn_demo.py          # PRBGraph model architecture with runnable shim dataset
-│   └── prb_graph_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
+│   ├── prb_graph_gnn_demo.ipynb          # PRBGraph model architecture with runnable shim dataset
+│   └── prb_graph_gnn_full_dataset.ipynb  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
 ├── train_prb_graph.py            # Scriptified training entry point
 ├── notebooks/
-│   ├── prb_graph_gnn_demo.ipynb       # Main ML4G term project notebook (full pipeline)
-│   └── prb_graph_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
+│   ├── prb_graph_gnn_demo.ipynb          # Main ML4G term project notebook (full pipeline)
+│   └── prb_graph_gnn_full_dataset.ipynb  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
 ├── requirements.txt              # Python dependencies
 └── README.md                     # This file
 ```
@@ -243,7 +243,7 @@ print("val confusion:", confusion_from_probs(val_y, val_p))
 > These results are intended to validate:
 >
 > * the **graph construction pipeline**, and
-> * the **PRB-GraphSAGE architecture**
+> * the **PRB-Graph architecture**
 >
 > only. **They are not production or publication-grade performance claims.**
 >
