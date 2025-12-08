@@ -40,12 +40,12 @@ The following files have been consolidated into a single `prb_graphsage_gnn.ipyn
 ├── tti_trust_dataloader.py       # (Optional) Sequence-level loader for the TCN baseline
 ├── prb_graph_dataloader.py       # UE-level graph construction & PyG DataLoaders
 ├── models/
-│   ├── prb_graphsage_gnn_demo.py          # PRBGraph model architecture with runnable shim dataset
-│   └── prb_graphsage_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
-├── train_prb_graphsage.py        # Scriptified training entry point
+│   ├── prb_graph_gnn_demo.py          # PRBGraph model architecture with runnable shim dataset
+│   └── prb_graph_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
+├── train_prb_graph.py            # Scriptified training entry point
 ├── notebooks/
-│   ├── prb_graphsage_gnn_demo.ipynb       # Main ML4G term project notebook (full pipeline)
-│   └── prb_graphsage_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
+│   ├── prb_graph_gnn_demo.ipynb       # Main ML4G term project notebook (full pipeline)
+│   └── prb_graph_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
 ├── requirements.txt              # Python dependencies
 └── README.md                     # This file
 ```
