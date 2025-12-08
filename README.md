@@ -1,6 +1,6 @@
 # PRB-GraphSAGE: UE-Level Contention Graphs for PRB Starvation Detection
 
-This repository contains the code for **PRB-GraphSAGE**, a prototype **graph neural network (GNN)** that detects PRB (Physical Resource Block) starvation in 5G/O-RAN from **per-TTI proportional-fair (PF) scheduler logs**.
+This repository contains the code for **PRB-Graph**, a prototype **graph neural network (GNN)** that detects PRB (Physical Resource Block) starvation in 5G/O-RAN from **per-TTI proportional-fair (PF) scheduler logs**.
 
 The work was originally developed as part of **CPSC 8810 (ML4G) at Clemson**, and is intended as a **model architecture + data pipeline prototype only**. It is *not* tuned on the full 30 GB dataset due to known noise and timing issues in the host-OS simulator logs.
 
@@ -24,9 +24,9 @@ On top of this, PRB-GraphSAGE adds:
   - Edges = UE pairs that are co-scheduled on ≥1 TTI (contention edges).
   - Node features = PRB usage / starvation / activity statistics per UE.
   - Graph label = attack vs non-attack at the window level.
-- A **GraphSAGE-style GNN** with global pooling + MLP head to classify windows.
+- A **GNN** with global pooling + MLP head to classify windows.
 
-This gives an **offline, slot-time-aware view of PF fairness** that can later be re-run on more accurate PF logs from NVIDIA's AI RAN stack.
+This gives an **offline, slot-time-aware view of PF fairness** that can later be re-run on more accurate PF logs from NVIDIA's AI-RAN stack.
 
 ---
 
@@ -40,10 +40,12 @@ The following files have been consolidated into a single `prb_graphsage_gnn.ipyn
 ├── tti_trust_dataloader.py       # (Optional) Sequence-level loader for the TCN baseline
 ├── prb_graph_dataloader.py       # UE-level graph construction & PyG DataLoaders
 ├── models/
-│   └── prb_graphsage.py          # PRBGraphSAGE model architecture (GraphSAGE + MLP)
-├── train_prb_graphsage.py        # (Optional) Scriptified training entry point
+│   ├── prb_graphsage_gnn_demo.py          # PRBGraph model architecture with runnable shim dataset
+│   └── prb_graphsage_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
+├── train_prb_graphsage.py        # Scriptified training entry point
 ├── notebooks/
-│   └── prb_graphsage_gnn.ipynb   # Main ML4G term project notebook (full pipeline)
+│   ├── prb_graphsage_gnn_demo.ipynb       # Main ML4G term project notebook (full pipeline)
+│   └── prb_graphsage_gnn_full_dataset.py  # PRBGraph model architecture with first two full runs of OpenAirInterface (OAI) benign + attack data
 ├── requirements.txt              # Python dependencies
 └── README.md                     # This file
 ```
@@ -58,8 +60,7 @@ Create a fresh environment (conda, venv, etc.) with **Python 3.9+** recommended.
 git clone <this-repo-url>
 cd <this-repo>
 
-# (Optional) create a venv / conda env
-pip install -r requirements.txt
+# DGX Spark's native Python venv was used within this pipeline, installing additional dependencies with pip as required.
 ```
 
 `requirements.txt` should include, at minimum:
@@ -90,11 +91,7 @@ Consult PyTorch & PyG installation guides for the exact wheel commands for your 
 
    For repo size reasons, the notebook also supports **shim** files (smaller subsets) under `data/shims/` with the same schema.
 
-2. Run preprocessing to convert CSV → parquet and generate window shards:
-
-   ```bash
-   python preproc_tti_trust.py
-   ```
+2. Run preprocessing to convert CSV → parquet and generate window shards (from the `demo` notebook:
 
    This produces:
 
@@ -110,7 +107,7 @@ Consult PyTorch & PyG installation guides for the exact wheel commands for your 
    └── ...
    ```
 
-### 2. PRB-GraphSAGE Graph Construction
+### 2. PRB-Graph Graph Construction
 
 The UE-level graph dataloader lives in `prb_graph_dataloader.py`. It:
 
@@ -235,7 +232,7 @@ print("val confusion:", confusion_from_probs(val_y, val_p))
 
 > **⚠️ Prototype-Only Results — Not Tuned on Full Dataset**
 >
-> The current PRB-GraphSAGE experiments are run on **small shim subsets** and on the original simulator logs, which are known to suffer from:
+> The current PRB-Graph experiments are run on **small shim subsets** and on the original simulator logs, which are known to suffer from:
 >
 > * host-OS timing jitter (breaking the true 0.5 ms TTI grid),
 > * label noise in “attack vs benign” windows, and

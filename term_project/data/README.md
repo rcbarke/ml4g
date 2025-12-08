@@ -6,13 +6,13 @@ This directory contains the **TTI-Trust / PRB-Graph** dataset used for the CPSC 
 
 The goal is **not** to provide a production-quality URLLC dataset, but to support an **offline GNN MVP** for:
 
-> **UE-level PRB starvation detection from scheduler logs**  
+> **UE-level PRB starvation detection from scheduler logs** 
 > using a compact GraphSAGE classifier on UE-contention graphs built from windowed PF evidence.
 
 This dataset is derived from an **OpenAirInterface (OAI) + iperf** single-cell, three-UE setup and is known to have timing issues. It is intentionally preserved here as a **teaching / prototyping dataset** to:
 
-- demonstrate how to turn scheduler logs into a graph-ML problem, and  
-- document the modeling challenges that arise when **wall-time is not slot-time**. :contentReference[oaicite:0]{index=0}  
+- demonstrate how to turn scheduler logs into a graph-ML problem, and 
+- document the modeling challenges that arise when **wall-time is not slot-time**.
 
 A future “clean” dataset will be regenerated on **NVIDIA Aerial / cuMAC on DGX Spark** where 0.5 ms slot timing is enforced by GPU L1/L2, but that data is *not* included here.
 
@@ -35,14 +35,14 @@ A future “clean” dataset will be regenerated on **NVIDIA Aerial / cuMAC on D
 
 At a minimum, the dataset includes:
 
-- `prb_tti_evidence_ai_attack.csv`  
-- `prb_tti_evidence_ai_benign.csv`  
+- `prb_tti_evidence_ai_attack.csv` 
+- `prb_tti_evidence_ai_benign.csv` 
 
 plus derived artifacts produced by the **TTI-Trust** preprocessing pipeline:
 
-- `win_shards/*.npz`  
+- `win_shards/*.npz` 
   - windowed tensors with per-TTI features (`xb_seq`) and auxiliary features (`xb_aux`)
-- `*_meta.parquet`  
+- `*_meta.parquet` 
   - metadata per window: `run_id`, `phase`, `window_start`, `label`, etc.
 
 Each row in the raw CSVs corresponds to a **single TTI** with per-UE PRB usage and fairness summaries. The windowing scripts group these into **fixed-length sliding windows** (e.g., `W = 100` TTIs) with labels indicating whether that window exhibits **PF-based PRB starvation** under a pre-defined predicate. 
@@ -57,7 +57,7 @@ The ML4G project formulates an **applications-type** GNN task: use PyTorch Geome
 
 For each TTI window (e.g., 100 TTIs), we build one graph:
 
-- **Nodes (UE–window pairs):**  
+- **Nodes (UE–window pairs):** 
   One node per UE that appears in the window.
 
 - **Edges (UE contention within the window):**
@@ -122,7 +122,7 @@ This dataset is *explicitly* labeled as **noisy and timing-broken**. It is suita
 - The OAI + iperf stack runs on a **general-purpose x86 OS** with:
   - multi-second traffic warm-ups, and
   - OS scheduling / NUMA / cache jitter.
-- As documented in the milestone and follow-up work, these effects **stretch and compress T_ON/T_OFF intervals**, corrupting the intended 0.5 ms TTI timing grid.   
+- As documented in the milestone and follow-up work, these effects **stretch and compress T_ON/T_OFF intervals**, corrupting the intended 0.5 ms TTI timing grid.
 - Consequence:
   - Starvation labels and fairness metrics (e.g., Jain’s J) are **noisy**.
   - The GNN may learn artifacts of OS noise rather than pure PF dynamics.
@@ -149,7 +149,7 @@ This dataset is *explicitly* labeled as **noisy and timing-broken**. It is suita
 ### 4.5 Simulation ≠ digital twin
 
 - These traces are from a CPU-bound host-OS simulator, not from a **GPU-native digital twin** (e.g., Aerial Omniverse Digital Twin, ACAR). AtlasRAN explicitly notes that host-OS simulators suffer from OS noise and scale limits that break Markov assumptions for RL and timing-sensitive control.
-- The ML4G project treats this dataset as a **stepping stone**; the long-term plan is to regenerate PF ledgers on DGX Spark + Aerial where slot-time determinism holds by construction.   
+- The ML4G project treats this dataset as a **stepping stone**; the long-term plan is to regenerate PF ledgers on DGX Spark + Aerial where slot-time determinism holds by construction.
 
 ---
 
@@ -161,7 +161,7 @@ You **can** use this dataset for:
   - parse per-TTI scheduler logs,
   - window them into fixed horizons,
   - build UE-contention graphs in PyG, and
-  - train/evaluate a GraphSAGE classifier with grouped CV.
+  - train/evaluate a Graph classifiers with grouped CV.
 - Performing **ablation studies** on:
   - node vs edge features,
   - graph vs non-graph baselines (e.g., MLP/GRU on windowed features),
@@ -185,10 +185,10 @@ The long-term research path (outside this course) is to:
 1. **Regenerate PRB traces** on **NVIDIA Aerial cuPHY/cuMAC** running on DGX Spark / GH200, with:
    - GPU-accelerated L1 and MAC,
    - 0.5 ms slot timing enforced at the hardware level,
-   - per-TTI ledgers via Aerial’s data lake.   
+   - per-TTI ledgers via Aerial’s data lake.
 2. **Keep the CSV schema identical** so that:
    - the **graph construction and GNN code in this repo are drop-in**.
-3. Re-train the same GraphSAGE model on the new traces and re-evaluate:
+3. Re-train the same Graph model on the new traces and re-evaluate:
    - That becomes the “PRB-Graph on true URLLC-grade traces” paper / follow-up.
 
 This README is intentionally explicit so that anyone who encounters this dataset in the future understands **both its value (for teaching and prototyping)** and **its limitations (for scientific claims).**
@@ -199,14 +199,14 @@ This README is intentionally explicit so that anyone who encounters this dataset
 
 If you reference this dataset or the surrounding methodology, please cite:
 
-- **PRB-Graph proposal:**  
+- **PRB-Graph proposal:** 
   *“PRB-Graph: A Spatio-Temporal GNN to Reconstruct PF Dynamics and Detect PRB Starvation from Scheduler Logs.”*
 
-- **AtlasRAN ecosystem survey:**  
+- **AtlasRAN ecosystem survey:** 
   *“AtlasRAN: The O-RAN and AI-RAN Compass.”* 
 
-- **Six Times to Spare (LDPC + DGX Spark):**  
-  *“Six Times to Spare: LDPC Acceleration on DGX Spark for AI-Native RAN.”*   
+- **Six Times to Spare (LDPC + DGX Spark):** 
+  *“Six Times to Spare: LDPC Acceleration on DGX Spark for AI-Native RAN.”*
 
 And, where relevant, the ML4G project description. 
 
